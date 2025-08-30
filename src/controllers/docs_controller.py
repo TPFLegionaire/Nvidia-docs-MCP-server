@@ -119,7 +119,7 @@ class DocsController:
             if redis_client:
                 try:
                     import json
-                    cache_data = json.dumps(document.dict(by_alias=True))
+                    cache_data = json.dumps(document.model_dump(by_alias=True))
                     await redis_client.setex(cache_key, timedelta(minutes=10), cache_data)
                 except Exception as e:
                     print(f"Cache write error: {e}")
