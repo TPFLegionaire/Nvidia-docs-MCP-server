@@ -136,20 +136,19 @@ async def ingest_documents():
         if all_documents and db.db is not None:
             try:
                 # Upsert documents based on URL
+                from pymongo import UpdateOne
                 operations = []
                 for doc in all_documents:
                     operations.append(
-                        {
-                            "filter": {"url": doc["url"]},
-                            "update": {"$set": doc},
-                            "upsert": True
-                        }
+                        UpdateOne(
+                            {"url": doc["url"]},
+                            {"$set": doc},
+                            upsert=True
+                        )
                     )
                 
                 if operations:
-                    result = await db.db.nvidia_docs.bulk_write([
-                        {"updateOne": op} for op in operations
-                    ])
+                    result = await db.db.nvidia_docs.bulk_write(operations)
                     print(f"Upserted {result.upserted_count + result.modified_count} documents")
                     
             except Exception as e:
