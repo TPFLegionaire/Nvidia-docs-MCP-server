@@ -6,6 +6,15 @@ from src.models.document import Document
 
 router = APIRouter()
 
+@router.get("/docs/stats")
+async def get_document_stats():
+    """
+    Get statistics about the NVIDIA documentation collection.
+    
+    Returns total document count, count by product type, and last update timestamp.
+    """
+    return await DocsController.get_document_stats()
+
 @router.get("/docs", response_model=List[Document])
 async def search_documents(
     product_type: Optional[str] = Query(None, description="Filter by product type (GPU, TRANSCEIVER, CABLING, NETWORK_CARD, SOFTWARE)"),
@@ -41,15 +50,6 @@ async def get_document_by_id(document_id: str):
     - **document_id**: MongoDB ObjectId of the document
     """
     return await DocsController.get_document_by_id(document_id)
-
-@router.get("/docs/stats")
-async def get_document_stats():
-    """
-    Get statistics about the NVIDIA documentation collection.
-    
-    Returns total document count, count by product type, and last update timestamp.
-    """
-    return await DocsController.get_document_stats()
 
 @router.post("/docs/ingest")
 async def trigger_ingestion():
