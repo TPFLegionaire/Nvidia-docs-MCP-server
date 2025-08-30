@@ -74,7 +74,7 @@ class DocsController:
                 try:
                     # Convert documents to JSON-serializable format
                     import json
-                    cache_data = json.dumps([doc.dict(by_alias=True) for doc in documents])
+                    cache_data = json.dumps([doc.model_dump(by_alias=True) for doc in documents])
                     await redis_client.setex(cache_key, timedelta(minutes=10), cache_data)
                 except Exception as e:
                     print(f"Cache write error: {e}")
