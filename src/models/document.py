@@ -53,7 +53,7 @@ class DocumentCreate(DocumentBase):
     pass
 
 class Document(DocumentBase):
-    id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
+    id: PyObjectId = Field(default_factory=PyObjectId, alias="_id", serialization_alias="id")
 
     model_config = {
         "populate_by_name": True,
