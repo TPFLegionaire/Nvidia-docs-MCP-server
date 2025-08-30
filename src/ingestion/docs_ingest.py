@@ -138,16 +138,18 @@ async def ingest_documents():
                 # Upsert documents based on URL
                 operations = []
                 for doc in all_documents:
-                    operations.append({
-                        'updateOne': {
-                            'filter': {'url': doc['url']},
-                            'update': {'$set': doc},
-                            'upsert': True
+                    operations.append(
+                        {
+                            "filter": {"url": doc["url"]},
+                            "update": {"$set": doc},
+                            "upsert": True
                         }
-                    })
+                    )
                 
                 if operations:
-                    result = await db.db.nvidia_docs.bulk_write(operations)
+                    result = await db.db.nvidia_docs.bulk_write([
+                        {"updateOne": op} for op in operations
+                    ])
                     print(f"Upserted {result.upserted_count + result.modified_count} documents")
                     
             except Exception as e:
