@@ -133,7 +133,7 @@ async def ingest_documents():
                 print(f"Error scraping {product_type}: {e}")
         
         # Store documents in MongoDB
-        if all_documents and db.db:
+        if all_documents and db.db is not None:
             try:
                 # Upsert documents based on URL
                 operations = []
